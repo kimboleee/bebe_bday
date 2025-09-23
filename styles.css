@@ -129,6 +129,15 @@ img {
   .hero-gallery.one-row img{ height: 110px; }
 }
 
+/* Fullscreen confetti layer, sits above content but doesn't block clicks */
+#confetti{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;   /* let clicks pass through */
+  z-index: 999;           /* above everything */
+}
 
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
 .site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
