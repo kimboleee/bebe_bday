@@ -82,3 +82,20 @@
   });
   document.getElementById('printBtn')?.addEventListener('click', () => window.print());
 })();
+
+// Typing effect for the word "puffer"
+document.addEventListener("DOMContentLoaded", () => {
+  const target = document.getElementById("typed-word");
+  const word = "puffer 🐡";
+  let i = 0;
+
+  function type() {
+    if (i < word.length) {
+      target.textContent += word.charAt(i);
+      i++;
+      setTimeout(type, 200); // typing speed (ms)
+    }
+  }
+
+  type();
+});
