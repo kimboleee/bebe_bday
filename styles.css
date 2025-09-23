@@ -48,7 +48,7 @@ body::before{
 }
 
 /* Image Formatting*/
-.puffer-img {
+img {
   width: 120px;   /* adjust size as you like */
   height: auto;
   border-radius: 1rem; /* soft rounded corners */
@@ -58,7 +58,7 @@ body::before{
   cursor: pointer;
 }
 
-.puffer-img:hover {
+.img:hover {
   transform: scale(1.08); /* zoom in on hover */
 }
 
