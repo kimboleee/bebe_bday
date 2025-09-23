@@ -19,7 +19,7 @@
     const dpr = Math.max(1, window.devicePixelRatio || 1);
     canvas.width  = Math.floor(window.innerWidth  * dpr);
     canvas.height = Math.floor(window.innerHeight * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // use CSS pixel coords
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
   };
   sizeCanvas();
   window.addEventListener('resize', sizeCanvas);
@@ -57,9 +57,18 @@
   }
   draw();
 
-  // Celebrate button still works if present
+  // Button-triggered celebrate (if present)
   document.getElementById('confettiBtn')?.addEventListener('click', () => {
-    burst(window.innerWidth * 0.5, 120);
+    burst(window.innerWidth * 0.5, 120, 140);
+  });
+
+  // Listen for custom celebrate events (used by the typing code)
+  document.addEventListener('puffer:celebrate', (e) => {
+    const d = e.detail || {};
+    const x = d.x ?? window.innerWidth * 0.5;
+    const y = d.y ?? 140;
+    const n = d.n ?? 160;
+    burst(x, y, n);
   });
 
   // ---- Images trigger confetti (scoped) ----
@@ -135,7 +144,7 @@
   document.getElementById('printBtn')?.addEventListener('click', () => window.print());
 })();
 
-// ---- Typing effect for the title ----
+// ---- Typing effect for the title (auto-confetti on finish) ----
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("typed-word");
   if (!target) return;
@@ -157,6 +166,21 @@ document.addEventListener("DOMContentLoaded", () => {
       target.textContent += ch;
       i++;
       setTimeout(type, nextDelay(ch));
+    } else {
+      // Title finished typing → celebrate!
+      setTimeout(() => {
+        const hero = document.querySelector('.hero'); // try to center near the hero section
+        let x = window.innerWidth * 0.5;
+        let y = 140;
+        if (hero) {
+          const r = hero.getBoundingClientRect();
+          x = r.left + r.width / 2;
+          y = Math.max(120, r.top + 60);
+        }
+        document.dispatchEvent(new CustomEvent('puffer:celebrate', {
+          detail: { x, y, n: 180 }
+        }));
+      }, 300);
     }
   }
   type();
