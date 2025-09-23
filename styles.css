@@ -1,0 +1,61 @@
+/* Noah’s 24th: Pufferfish Care Guide — styles */
+:root{
+  --bg:#0b132b;
+  --panel:#1c2541;
+  --card:#0f203a;
+  --fg:#eaf2ff;
+  --muted:#9fb3c8;
+  --accent:#5bc0be;
+  --accent-2:#6fffe9;
+  --border:#243b55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+  background: radial-gradient(1200px 600px at 20% -10%, #112, transparent), var(--bg);
+  color:var(--fg);
+  line-height:1.7;
+}
+.container{max-width:1000px;margin:0 auto;padding:1.25rem}
+.site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
+.brand{display:flex;align-items:center;gap:.75rem}
+.logo{width:36px;height:36px}
+.site-header h1{font-size:1.25rem;margin:0}
+nav{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:1rem}
+nav a{color:var(--fg);text-decoration:none;opacity:.9}
+nav a:hover{color:var(--accent)}
+
+.hero{padding:1.5rem 0 1rem}
+.hero h2{font-size:2.1rem;margin:0 0 .25rem}
+.lead{font-size:1.1rem;color:var(--fg);opacity:.95}
+.note{color:var(--muted);font-size:.95rem}
+.tip{background: linear-gradient(90deg, rgba(91,192,190,.2), transparent); padding:.5rem .75rem;border-left:3px solid var(--accent);border-radius:.4rem}
+
+.cta-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem}
+.btn{display:inline-block;padding:.6rem .9rem;border-radius:.7rem;background:var(--accent);color:#08131a;text-decoration:none;font-weight:700;border:none;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--fg);border:1px solid var(--border)}
+.btn.small{font-size:.9rem;padding:.45rem .7rem}
+
+.grid{display:grid;gap:1rem;grid-template-columns: repeat(auto-fit, minmax(260px,1fr))}
+.grid.two{grid-template-columns: repeat(auto-fit, minmax(300px,1fr))}
+
+.card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)), var(--card);border:1px solid var(--border);border-radius:1rem;padding:1rem}
+.card h4{margin:.25rem 0 .35rem}
+.bullets{padding-left:1.1rem}
+.bullets li{margin:.3rem 0}
+
+blockquote.love{
+  background: linear-gradient(90deg, rgba(111,255,233,.12), transparent);
+  border-left:3px solid var(--accent-2);
+  padding:.75rem .9rem;border-radius:.4rem;margin:0 0 1rem;
+}
+
+.site-footer{border-top:1px solid var(--border);color:var(--muted);font-size:.95rem;margin-top:2rem}
+.site-footer summary{cursor:pointer}
+
+.checklist{display:grid;gap:.5rem;margin:.75rem 0}
+.todo{display:flex;align-items:center;gap:.6rem;background:var(--panel);border:1px solid var(--border);padding:.6rem .75rem;border-radius:.7rem}
+.todo input[type="checkbox"]{transform:scale(1.2)}
+.todo label{flex:1}
+.todo .hint{color:var(--muted);font-size:.9rem}
