@@ -125,11 +125,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const word = "Puffer 🐡!!!!";
   let i = 0;
 
+  // Random delay per character, with a longer pause on punctuation/space
+  function nextDelay(ch) {
+    const baseMin = 200;  // fastest
+    const baseMax = 400;  // slowest (normal char)
+    const jitter = baseMin + Math.random() * (baseMax - baseMin);
+
+    if (",.;:!? ".includes(ch)) {
+      return jitter + 200; // extra pause after punctuation/space
+    }
+    return jitter;
+  }
+
   function type() {
     if (i < word.length) {
-      target.textContent += word.charAt(i);
+      const ch = word.charAt(i);
+      target.textContent += ch;
       i++;
-      setTimeout(type, 100); // typing speed (ms)
+      setTimeout(type, nextDelay(ch));
     }
   }
   type();
