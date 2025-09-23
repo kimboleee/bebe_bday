@@ -93,6 +93,42 @@ img {
   .hero-gallery img{ height: 110px; }
 }
 
+/* Ensures one row images */
+/* One-row image strip */
+.hero-gallery.one-row{
+  display: flex;
+  flex-wrap: nowrap;              /* never wrap to a new line */
+  gap: 1rem;
+  justify-content: center;        /* center the whole row */
+  align-items: center;
+  margin-top: .75rem;
+  overflow-x: auto;               /* allow sideways scroll on tiny screens */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Same visual scale for all images */
+.hero-gallery.one-row img{
+  flex: 0 0 auto;                 /* keep each image’s width; don’t shrink */
+  height: 140px;                  /* adjust to taste */
+  width: auto;                    /* preserve aspect ratio */
+  object-fit: contain;
+  border-radius: 1rem;
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  transition: transform .25s ease;
+  cursor: pointer;
+}
+
+.hero-gallery.one-row img:hover{
+  transform: scale(1.05);
+}
+
+/* If you want them smaller on phones (still one row, possibly scrollable) */
+@media (max-width: 480px){
+  .hero-gallery.one-row img{ height: 110px; }
+}
+
 
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
 .site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
