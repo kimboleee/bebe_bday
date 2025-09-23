@@ -8,7 +8,16 @@
   --accent:#5bc0be;
   --accent-2:#6fffe9;
   --border:#243b55;
+  --link: #6fffe9;
+  --link-visited: #a7e8ff;
+  --link-hover: #8cfef2;
 }
+
+a{ color: var(--link); }
+a:hover, a:focus-visible{ color: var(--link-hover); }
+a:visited{ color: var(--link-visited); }
+}
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
