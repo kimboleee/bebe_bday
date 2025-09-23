@@ -35,6 +35,7 @@ body::before{
   }
 }
 
+/*Puffer Effects on Title*/
 #typed-word::after {
   content: "|";
   animation: blink 1s infinite;
@@ -44,6 +45,21 @@ body::before{
 @keyframes blink {
   0%, 50% { opacity: 1; }
   50.01%, 100% { opacity: 0; }
+}
+
+/* Image Formatting*/
+.puffer-img {
+  width: 120px;   /* adjust size as you like */
+  height: auto;
+  border-radius: 1rem; /* soft rounded corners */
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.puffer-img:hover {
+  transform: scale(1.08); /* zoom in on hover */
 }
 
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
