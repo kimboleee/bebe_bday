@@ -122,14 +122,14 @@ function wireImageConfetti() {
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("typed-word");
   if (!target) return;
-  const word = "puffer 🐡";
+  const word = "Puffer 🐡!!!!";
   let i = 0;
 
   function type() {
     if (i < word.length) {
       target.textContent += word.charAt(i);
       i++;
-      setTimeout(type, 200); // typing speed (ms)
+      setTimeout(type, 100); // typing speed (ms)
     }
   }
   type();
