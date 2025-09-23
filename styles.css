@@ -35,6 +35,17 @@ body::before{
   }
 }
 
+#typed-word::after {
+  content: "|";
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
 .site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
 .brand{display:flex;align-items:center;gap:.75rem}
