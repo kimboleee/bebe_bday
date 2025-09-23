@@ -127,8 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Random delay per character, with a longer pause on punctuation/space
   function nextDelay(ch) {
-    const baseMin = 200;  // fastest
-    const baseMax = 400;  // slowest (normal char)
+    const baseMin = 250;  // fastest
+    const baseMax = 500;  // slowest (normal char)
     const jitter = baseMin + Math.random() * (baseMax - baseMin);
 
     if (",.;:!? ".includes(ch)) {
