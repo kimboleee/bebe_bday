@@ -44,35 +44,33 @@
   // Old Celebrate button still works if present
   if (btn) btn.addEventListener('click', () => burst(window.innerWidth * 0.5, 120));
 
-  // NEW: Make images with .puffer-img trigger confetti on click
-  // Works for your luffy.png, buffy.png, hank.png (ensure they have class="puffer-img")
-  function wireImageConfetti() {
-    document.querySelectorAll('.puffer-img').forEach(img => {
-      // Avoid double-binding if hot-reloading / repeated calls
-      if (img.dataset.confettiBound === '1') return;
-      img.dataset.confettiBound = '1';
+  // NEW: Make all <img> trigger confetti on click
+function wireImageConfetti() {
+  document.querySelectorAll('img').forEach(img => {
+    if (img.dataset.confettiBound === '1') return;
+    img.dataset.confettiBound = '1';
 
-      img.addEventListener('click', (e) => {
+    img.addEventListener('click', () => {
+      const rect = img.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      burst(x, y, 90);
+    });
+
+    // Optional: keyboard accessibility
+    img.setAttribute('tabindex', '0');
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
         const rect = img.getBoundingClientRect();
-        // Canvas is fixed to the viewport, so use viewport (client) coords
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-        burst(x, y, 90); // a slightly smaller burst for images
-      });
-
-      // Optional: keyboard accessibility (Enter/Space)
-      img.setAttribute('tabindex', '0');
-      img.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const rect = img.getBoundingClientRect();
-          const x = rect.left + rect.width / 2;
-          const y = rect.top + rect.height / 2;
-          burst(x, y, 90);
-        }
-      });
+        burst(x, y, 90);
+      }
     });
-  }
+  });
+}
+
 
   // Run once now (script is loaded at end of body, so DOM is ready)
   wireImageConfetti();
