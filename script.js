@@ -122,7 +122,7 @@ function wireImageConfetti() {
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("typed-word");
   if (!target) return;
-  const word = "Puffer 🐡!!!!";
+  const word = "My Baby's Guide to Owning a Puffer 🐡!!!!";
   let i = 0;
 
   // Random delay per character, with a longer pause on punctuation/space
