@@ -3,14 +3,26 @@
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Tiny confetti
+  // ---- Confetti setup ----
   const canvas = document.getElementById('confetti');
-  const btn = document.getElementById('confettiBtn');
+  if (!canvas) {
+    console.warn('[confetti] #confetti canvas not found');
+    return;
+  }
   const ctx = canvas.getContext('2d');
-  const W = () => (canvas.width = window.innerWidth);
-  const H = () => (canvas.height = window.innerHeight);
-  W(); H();
-  window.addEventListener('resize', () => { W(); H(); });
+  if (!ctx) {
+    console.warn('[confetti] 2D context not available');
+    return;
+  }
+
+  const sizeCanvas = () => {
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width  = Math.floor(window.innerWidth  * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // use CSS pixel coords
+  };
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
 
   let pieces = [];
   function burst(x, y, n = 120) {
@@ -21,7 +33,8 @@
         vy: (Math.random() * -1) * 6 - 2,
         g: 0.12 + Math.random() * 0.12,
         a: 1,
-        r: 2 + Math.random() * 3
+        r: 2 + Math.random() * 3,
+        c: ['#5bc0be','#6fffe9','#eaf2ff','#f9d976','#ffaaa7'][Math.floor(Math.random() * 5)]
       });
     }
   }
@@ -32,50 +45,53 @@
       ctx.globalAlpha = Math.max(p.a, 0);
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = ['#5bc0be','#6fffe9','#eaf2ff','#f9d976','#ffaaa7'][Math.floor(Math.random() * 5)];
+      ctx.fillStyle = p.c;
       ctx.fill();
-      p.x += p.vx; p.y += p.vy; p.vy += p.g; p.a -= 0.01;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.g;
+      p.a -= 0.01;
     }
-    pieces = pieces.filter(p => p.a > 0 && p.y < canvas.height + 20);
+    pieces = pieces.filter(p => p.a > 0 && p.y < window.innerHeight + 40);
     requestAnimationFrame(draw);
   }
   draw();
 
-  // Old Celebrate button still works if present
-  if (btn) btn.addEventListener('click', () => burst(window.innerWidth * 0.5, 120));
+  // Celebrate button still works if present
+  document.getElementById('confettiBtn')?.addEventListener('click', () => {
+    burst(window.innerWidth * 0.5, 120);
+  });
 
-  // NEW: Make all <img> trigger confetti on click
-function wireImageConfetti() {
-  document.querySelectorAll('img').forEach(img => {
-    if (img.dataset.confettiBound === '1') return;
-    img.dataset.confettiBound = '1';
+  // ---- Images trigger confetti (scoped) ----
+  function bindImageBursts() {
+    const selectors = ['.cta-row img', '.hero-gallery img'];
+    document.querySelectorAll(selectors.join(',')).forEach(img => {
+      if (img.dataset.confettiBound === '1') return;
+      img.dataset.confettiBound = '1';
 
-    img.addEventListener('click', () => {
-      const rect = img.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      burst(x, y, 90);
-    });
-
-    // Optional: keyboard accessibility
-    img.setAttribute('tabindex', '0');
-    img.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
+      const fire = () => {
         const rect = img.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
         burst(x, y, 90);
-      }
+      };
+
+      img.addEventListener('click', fire);
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fire(); }
+      });
     });
-  });
-}
+  }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindImageBursts, { once: true });
+  } else {
+    bindImageBursts();
+  }
 
-  // Run once now (script is loaded at end of body, so DOM is ready)
-  wireImageConfetti();
-
-  // Checklist
+  // ---- Checklist ----
   const TODOS = [
     { id:'tank', text:'Pick puffer species + appropriate tank size' },
     { id:'cycle', text:'Fishless cycle complete (0 ammonia/0 nitrite)' },
@@ -93,6 +109,7 @@ function wireImageConfetti() {
   try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch {}
 
   function render() {
+    if (!listEl) return;
     listEl.innerHTML = '';
     TODOS.forEach(item => {
       const wrap = document.createElement('div');
@@ -118,22 +135,19 @@ function wireImageConfetti() {
   document.getElementById('printBtn')?.addEventListener('click', () => window.print());
 })();
 
-// Typing effect for the word "puffer"
+// ---- Typing effect for the title ----
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("typed-word");
   if (!target) return;
+
   const word = "My Baby's Guide to Owning a Puffer 🐡!!!!";
   let i = 0;
 
-  // Random delay per character, with a longer pause on punctuation/space
   function nextDelay(ch) {
-    const baseMin = 250;  // fastest
-    const baseMax = 500;  // slowest (normal char)
+    const baseMin = 200;
+    const baseMax = 400;
     const jitter = baseMin + Math.random() * (baseMax - baseMin);
-
-    if (",.;:!? ".includes(ch)) {
-      return jitter + 200; // extra pause after punctuation/space
-    }
+    if (",.;:!? ".includes(ch)) return jitter + 200;
     return jitter;
   }
 
