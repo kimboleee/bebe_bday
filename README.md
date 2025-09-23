@@ -1,4 +1,4 @@
-# Noah’s 24th — Pufferfish Care Guide (Gift Site)
+# Noah’s 24th — Pufferfish Care Guide
 
 A playful, science‑minded guide website gifted to **Noah** for his 24th birthday.
 
