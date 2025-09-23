@@ -148,6 +148,50 @@ img {
   z-index: 999;           /* above everything */
 }
 
+/* Base link colors */
+a {
+  color: #6fffe9;              /* bright aqua */
+  text-decoration-color: rgba(111,255,233,.55);
+  text-underline-offset: 2px;
+}
+
+a:hover,
+a:focus-visible {
+  color: #8cfef2;              /* lighter on hover */
+  text-decoration-color: currentColor;
+}
+
+a:active {
+  color: #b6fff6;
+}
+
+a:visited {
+  color: #a7e8ff;              /* distinct but still bright */
+}
+
+/* Improve contrast specifically inside main content */
+main a { color: #7be0ff; }
+main a:hover,
+main a:focus-visible { color: #b0e7ff; }
+
+/* Higher-contrast nav links */
+.site-header nav a {
+  color: #eaf2ff;              /* light text in nav */
+  opacity: 1;                  /* remove dimming */
+}
+.site-header nav a:hover,
+.site-header nav a:focus-visible {
+  color: #6fffe9;
+}
+
+/* Buttons should keep their button look (don’t inherit link colors) */
+a.btn {
+  color: #08131a;              /* your button text color */
+  text-decoration: none;
+}
+a.btn.secondary { color: #eaf2ff; }
+
+
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
 .site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
 .brand{display:flex;align-items:center;gap:.75rem}
