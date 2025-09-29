@@ -185,3 +185,51 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   type();
 });
+
+// Mascot tips: click (or Enter/Space) to toggle a small bubble
+(function(){
+  function closeAllTips(){
+    document.querySelectorAll('.mascot-tip').forEach(x => x.remove());
+  }
+
+  function bindMascots(){
+    document.querySelectorAll('.section-title .mascot[data-tip]').forEach(img => {
+      if (img.dataset.tipBound === '1') return;
+      img.dataset.tipBound = '1';
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', 'Show tip');
+
+      function toggleTip(){
+        const holder = img.closest('.section-title');
+        const existing = holder.querySelector('.mascot-tip');
+        if (existing) { existing.remove(); return; }
+
+        closeAllTips(); // one bubble at a time
+        const tip = document.createElement('div');
+        tip.className = 'mascot-tip';
+        tip.textContent = img.dataset.tip || '';
+        holder.appendChild(tip);
+        // show with transition
+        requestAnimationFrame(() => tip.classList.add('show'));
+      }
+
+      img.addEventListener('click', toggleTip);
+      img.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTip(); }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindMascots, { once: true });
+  } else {
+    bindMascots();
+  }
+
+  // Close bubbles when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.section-title')) closeAllTips();
+  });
+})();
+
