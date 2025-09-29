@@ -106,18 +106,20 @@ img {
 /* One-row image strip */
 .hero-gallery.one-row{
   display: flex;
-  flex-wrap: nowrap;              /* never wrap to a new line */
+  flex-wrap: nowrap;
   gap: 1rem;
-  justify-content: center;        /* center the whole row */
+  justify-content: center;
   align-items: center;
   margin-top: .75rem;
-  overflow-x: hidden;               /* hides horizontal scrollbar */
+  overflow-x: auto;                 /* keep scrolling */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;            /* Firefox hide */
 }
+.hero-gallery.one-row::-webkit-scrollbar{ display: none; }  /* WebKit hide */
 
-/* Same visual scale for all images */
 .hero-gallery.one-row img{
   flex: 0 0 auto;
-  height: clamp(90px, 22vw, 140px);  /* auto-shrink on mobile */
+  height: 140px;
   width: auto;
   object-fit: contain;
   border-radius: 1rem;
@@ -125,7 +127,6 @@ img {
   box-shadow: 0 4px 12px rgba(0,0,0,.35);
   transition: transform .25s ease;
   transform-origin: center;
-  will-change: transform;
 }
 
 .hero-gallery.one-row img:hover{
