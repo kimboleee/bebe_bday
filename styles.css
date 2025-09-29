@@ -111,22 +111,21 @@ img {
   justify-content: center;        /* center the whole row */
   align-items: center;
   margin-top: .75rem;
-  overflow-x: auto;               /* allow sideways scroll on tiny screens */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  overflow-x: hidden;               /* hides horizontal scrollbar */
 }
 
 /* Same visual scale for all images */
 .hero-gallery.one-row img{
-  flex: 0 0 auto;                 /* keep each image’s width; don’t shrink */
-  height: 140px;                  /* adjust to taste */
-  width: auto;                    /* preserve aspect ratio */
+  flex: 0 0 auto;
+  height: clamp(90px, 22vw, 140px);  /* auto-shrink on mobile */
+  width: auto;
   object-fit: contain;
   border-radius: 1rem;
   border: 2px solid var(--accent);
   box-shadow: 0 4px 12px rgba(0,0,0,.35);
   transition: transform .25s ease;
-  cursor: pointer;
+  transform-origin: center;
+  will-change: transform;
 }
 
 .hero-gallery.one-row img:hover{
