@@ -186,50 +186,53 @@ document.addEventListener("DOMContentLoaded", () => {
   type();
 });
 
-// Mascot tips: click (or Enter/Space) to toggle a small bubble
+// --- Mascot tips: event delegation (robust) ---
 (function(){
   function closeAllTips(){
-    document.querySelectorAll('.mascot-tip').forEach(x => x.remove());
+    document.querySelectorAll('.mascot-tip').forEach(el => el.remove());
+  }
+  function toggleTipFor(img){
+    const holder = img.closest('.section-title');
+    if (!holder) return;
+    const existing = holder.querySelector('.mascot-tip');
+    if (existing){ existing.remove(); return; }
+
+    closeAllTips(); // only one open at a time
+    const tip = document.createElement('div');
+    tip.className = 'mascot-tip';
+    tip.textContent = img.getAttribute('data-tip') || '';
+    holder.appendChild(tip);
+    requestAnimationFrame(() => tip.classList.add('show'));
   }
 
-  function bindMascots(){
-    document.querySelectorAll('.section-title .mascot[data-tip]').forEach(img => {
-      if (img.dataset.tipBound === '1') return;
-      img.dataset.tipBound = '1';
-      img.setAttribute('tabindex', '0');
-      img.setAttribute('role', 'button');
-      img.setAttribute('aria-label', 'Show tip');
-
-      function toggleTip(){
-        const holder = img.closest('.section-title');
-        const existing = holder.querySelector('.mascot-tip');
-        if (existing) { existing.remove(); return; }
-
-        closeAllTips(); // one bubble at a time
-        const tip = document.createElement('div');
-        tip.className = 'mascot-tip';
-        tip.textContent = img.dataset.tip || '';
-        holder.appendChild(tip);
-        // show with transition
-        requestAnimationFrame(() => tip.classList.add('show'));
-      }
-
-      img.addEventListener('click', toggleTip);
-      img.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTip(); }
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindMascots, { once: true });
-  } else {
-    bindMascots();
-  }
-
-  // Close bubbles when clicking outside
+  // Click on a mascot image -> toggle that bubble
   document.addEventListener('click', (e) => {
+    const mascot = e.target.closest('.section-title .mascot');
+    if (mascot){ toggleTipFor(mascot); return; }
+    // click outside any section-title closes tips
     if (!e.target.closest('.section-title')) closeAllTips();
   });
-})();
 
+  // Keyboard accessibility (Enter/Space on focused mascot)
+  document.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') &&
+        e.target && e.target.matches('.section-title .mascot')) {
+      e.preventDefault();
+      toggleTipFor(e.target);
+    }
+  });
+
+  // Ensure mascots are focusable (in case HTML missed it)
+  function ensureFocusable(){
+    document.querySelectorAll('.section-title .mascot').forEach(img => {
+      if (!img.hasAttribute('tabindex')) img.setAttribute('tabindex', '0');
+      if (!img.hasAttribute('role')) img.setAttribute('role', 'button');
+      if (!img.hasAttribute('aria-label')) img.setAttribute('aria-label', 'Show tip');
+    });
+  }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ensureFocusable, { once:true });
+  } else {
+    ensureFocusable();
+  }
+})();
