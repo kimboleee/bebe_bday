@@ -230,6 +230,24 @@ a.btn.secondary { color: #eaf2ff; }
   border:8px solid transparent; border-right-color: var(--panel);
 }
 
+.card-header{
+  display:flex; align-items:center; gap:.5rem;
+  margin-bottom:.25rem;
+}
+.site-logo{
+  width:22px; height:22px; border-radius:4px; flex:0 0 auto;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+}
+.site-chip{
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.25rem .5rem; border-radius:.5rem;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.05);
+  text-decoration:none;
+}
+.site-chip img{ width:16px; height:16px; border-radius:3px; }
+.site-chip:hover{ background: rgba(255,255,255,.09); }
+
 
 .container{max-width:1000px;margin:0 auto;padding:1.25rem}
 .site-header{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(12,19,43,.7);border-bottom:1px solid var(--border);z-index:10}
