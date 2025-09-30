@@ -1,40 +1,43 @@
 // Confetti + checklist logic
 (() => {
-  const yearEl = document.getElementById('year');
+  const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   // ---- Confetti setup ----
-  const canvas = document.getElementById('confetti');
+  const canvas = document.getElementById("confetti");
   if (!canvas) {
-    console.warn('[confetti] #confetti canvas not found');
+    console.warn("[confetti] #confetti canvas not found");
     return;
   }
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   if (!ctx) {
-    console.warn('[confetti] 2D context not available');
+    console.warn("[confetti] 2D context not available");
     return;
   }
 
   const sizeCanvas = () => {
     const dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.width  = Math.floor(window.innerWidth  * dpr);
+    canvas.width = Math.floor(window.innerWidth * dpr);
     canvas.height = Math.floor(window.innerHeight * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
   };
   sizeCanvas();
-  window.addEventListener('resize', sizeCanvas);
+  window.addEventListener("resize", sizeCanvas);
 
   let pieces = [];
   function burst(x, y, n = 120) {
     for (let i = 0; i < n; i++) {
       pieces.push({
-        x, y,
+        x,
+        y,
         vx: (Math.random() * 2 - 1) * 4,
-        vy: (Math.random() * -1) * 6 - 2,
+        vy: Math.random() * -6 - 2,
         g: 0.12 + Math.random() * 0.12,
         a: 1,
         r: 2 + Math.random() * 3,
-        c: ['#5bc0be','#6fffe9','#eaf2ff','#f9d976','#ffaaa7'][Math.floor(Math.random() * 5)]
+        c: ["#5bc0be", "#6fffe9", "#eaf2ff", "#f9d976", "#ffaaa7"][
+          Math.floor(Math.random() * 5)
+        ],
       });
     }
   }
@@ -52,18 +55,18 @@
       p.vy += p.g;
       p.a -= 0.01;
     }
-    pieces = pieces.filter(p => p.a > 0 && p.y < window.innerHeight + 40);
+    pieces = pieces.filter((p) => p.a > 0 && p.y < window.innerHeight + 40);
     requestAnimationFrame(draw);
   }
   draw();
 
   // Button-triggered celebrate (if present)
-  document.getElementById('confettiBtn')?.addEventListener('click', () => {
+  document.getElementById("confettiBtn")?.addEventListener("click", () => {
     burst(window.innerWidth * 0.5, 120, 140);
   });
 
   // Listen for custom celebrate events (used by the typing code)
-  document.addEventListener('puffer:celebrate', (e) => {
+  document.addEventListener("puffer:celebrate", (e) => {
     const d = e.detail || {};
     const x = d.x ?? window.innerWidth * 0.5;
     const y = d.y ?? 140;
@@ -73,10 +76,10 @@
 
   // ---- Images trigger confetti (scoped) ----
   function bindImageBursts() {
-    const selectors = ['.cta-row img', '.hero-gallery img'];
-    document.querySelectorAll(selectors.join(',')).forEach(img => {
-      if (img.dataset.confettiBound === '1') return;
-      img.dataset.confettiBound = '1';
+    const selectors = [".cta-row img", ".hero-gallery img"];
+    document.querySelectorAll(selectors.join(",")).forEach((img) => {
+      if (img.dataset.confettiBound === "1") return;
+      img.dataset.confettiBound = "1";
 
       const fire = () => {
         const rect = img.getBoundingClientRect();
@@ -85,52 +88,67 @@
         burst(x, y, 90);
       };
 
-      img.addEventListener('click', fire);
-      img.setAttribute('tabindex', '0');
-      img.setAttribute('role', 'button');
-      img.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fire(); }
+      img.addEventListener("click", fire);
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          fire();
+        }
       });
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', bindImageBursts, { once: true });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindImageBursts, { once: true });
   } else {
     bindImageBursts();
   }
 
   // ---- Checklist ----
   const TODOS = [
-    { id:'tank', text:'Pick puffer species + appropriate tank size' },
-    { id:'cycle', text:'Fishless cycle complete (0 ammonia/0 nitrite)' },
-    { id:'heater', text:'Heater + thermometer installed; temp stable' },
-    { id:'filter', text:'Filter chosen; flow gentle; media seeded' },
-    { id:'test', text:'Water test kits ready (NH3/NO2/NO3/pH; salinity if needed)' },
-    { id:'hardscape', text:'Hiding spots, plants, and sand/substrate added' },
-    { id:'food', text:'Stock varied foods (incl. crunchy shells)' },
-    { id:'schedule', text:'Make weekly water-change schedule' },
+    { id: "tank", text: "Pick puffer species + appropriate tank size" },
+    { id: "cycle", text: "Fishless cycle complete (0 ammonia/0 nitrite)" },
+    { id: "heater", text: "Heater + thermometer installed; temp stable" },
+    { id: "filter", text: "Filter chosen; flow gentle; media seeded" },
+    {
+      id: "test",
+      text: "Water test kits ready (NH3/NO2/NO3/pH; salinity if needed)",
+    },
+    { id: "hardscape", text: "Hiding spots, plants, and sand/substrate added" },
+    { id: "food", text: "Stock varied foods (incl. crunchy shells)" },
+    { id: "schedule", text: "Make weekly water-change schedule" },
   ];
 
-  const listEl = document.getElementById('todoList');
-  const KEY = 'noah_puffer_checklist_v1';
+  const listEl = document.getElementById("todoList");
+  const KEY = "noah_puffer_checklist_v1";
   let state = {};
-  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch {}
+  try {
+    state = JSON.parse(localStorage.getItem(KEY) || "{}");
+  } catch {}
 
   function render() {
     if (!listEl) return;
-    listEl.innerHTML = '';
-    TODOS.forEach(item => {
-      const wrap = document.createElement('div');
-      wrap.className = 'todo';
-      const cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.id = item.id; cb.checked = !!state[item.id];
-      const lab = document.createElement('label');
-      lab.setAttribute('for', item.id);
+    listEl.innerHTML = "";
+    TODOS.forEach((item) => {
+      const wrap = document.createElement("div");
+      wrap.className = "todo";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.id = item.id;
+      cb.checked = !!state[item.id];
+
+      const lab = document.createElement("label");
+      lab.setAttribute("for", item.id);
       lab.textContent = item.text;
-      wrap.appendChild(cb); wrap.appendChild(lab);
+
+      wrap.appendChild(cb);
+      wrap.appendChild(lab);
       listEl.appendChild(wrap);
-      cb.addEventListener('change', () => {
+
+      cb.addEventListener("change", () => {
         state[item.id] = cb.checked;
         localStorage.setItem(KEY, JSON.stringify(state));
       });
@@ -138,10 +156,13 @@
   }
   render();
 
-  document.getElementById('resetBtn')?.addEventListener('click', () => {
-    state = {}; localStorage.setItem(KEY, JSON.stringify(state)); render();
+  document.getElementById("resetBtn")?.addEventListener("click", () => {
+    state = {};
+    localStorage.setItem(KEY, JSON.stringify(state));
+    render();
   });
-  document.getElementById('printBtn')?.addEventListener('click', () => window.print());
+
+  document.getElementById("printBtn")?.addEventListener("click", () => window.print());
 })();
 
 // ---- Typing effect for the title (auto-confetti on finish) ----
@@ -169,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       // Title finished typing → celebrate!
       setTimeout(() => {
-        const hero = document.querySelector('.hero'); // try to center near the hero section
+        const hero = document.querySelector(".hero"); // try to center near the hero section
         let x = window.innerWidth * 0.5;
         let y = 140;
         if (hero) {
@@ -177,61 +198,76 @@ document.addEventListener("DOMContentLoaded", () => {
           x = r.left + r.width / 2;
           y = Math.max(120, r.top + 60);
         }
-        document.dispatchEvent(new CustomEvent('puffer:celebrate', {
-          detail: { x, y, n: 180 }
-        }));
+        document.dispatchEvent(
+          new CustomEvent("puffer:celebrate", {
+            detail: { x, y, n: 180 },
+          })
+        );
       }, 300);
     }
   }
+
   type();
 });
 
 // --- Mascot tips: event delegation (robust) ---
-(function(){
-  function closeAllTips(){
-    document.querySelectorAll('.mascot-tip').forEach(el => el.remove());
+(() => {
+  function closeAllTips() {
+    document.querySelectorAll(".mascot-tip").forEach((el) => el.remove());
   }
-  function toggleTipFor(img){
-    const holder = img.closest('.section-title');
+
+  function toggleTipFor(img) {
+    const holder = img.closest(".section-title");
     if (!holder) return;
-    const existing = holder.querySelector('.mascot-tip');
-    if (existing){ existing.remove(); return; }
+
+    const existing = holder.querySelector(".mascot-tip");
+    if (existing) {
+      existing.remove();
+      return;
+    }
 
     closeAllTips(); // only one open at a time
-    const tip = document.createElement('div');
-    tip.className = 'mascot-tip';
-    tip.textContent = img.getAttribute('data-tip') || '';
+    const tip = document.createElement("div");
+    tip.className = "mascot-tip";
+    tip.textContent = img.getAttribute("data-tip") || "";
     holder.appendChild(tip);
-    requestAnimationFrame(() => tip.classList.add('show'));
+    requestAnimationFrame(() => tip.classList.add("show"));
   }
 
   // Click on a mascot image -> toggle that bubble
-  document.addEventListener('click', (e) => {
-    const mascot = e.target.closest('.section-title .mascot');
-    if (mascot){ toggleTipFor(mascot); return; }
+  document.addEventListener("click", (e) => {
+    const mascot = e.target.closest(".section-title .mascot");
+    if (mascot) {
+      toggleTipFor(mascot);
+      return;
+    }
     // click outside any section-title closes tips
-    if (!e.target.closest('.section-title')) closeAllTips();
+    if (!e.target.closest(".section-title")) closeAllTips();
   });
 
   // Keyboard accessibility (Enter/Space on focused mascot)
-  document.addEventListener('keydown', (e) => {
-    if ((e.key === 'Enter' || e.key === ' ') &&
-        e.target && e.target.matches('.section-title .mascot')) {
+  document.addEventListener("keydown", (e) => {
+    if (
+      (e.key === "Enter" || e.key === " ") &&
+      e.target &&
+      e.target.matches(".section-title .mascot")
+    ) {
       e.preventDefault();
       toggleTipFor(e.target);
     }
   });
 
   // Ensure mascots are focusable (in case HTML missed it)
-  function ensureFocusable(){
-    document.querySelectorAll('.section-title .mascot').forEach(img => {
-      if (!img.hasAttribute('tabindex')) img.setAttribute('tabindex', '0');
-      if (!img.hasAttribute('role')) img.setAttribute('role', 'button');
-      if (!img.hasAttribute('aria-label')) img.setAttribute('aria-label', 'Show tip');
+  function ensureFocusable() {
+    document.querySelectorAll(".section-title .mascot").forEach((img) => {
+      if (!img.hasAttribute("tabindex")) img.setAttribute("tabindex", "0");
+      if (!img.hasAttribute("role")) img.setAttribute("role", "button");
+      if (!img.hasAttribute("aria-label")) img.setAttribute("aria-label", "Show tip");
     });
   }
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', ensureFocusable, { once:true });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", ensureFocusable, { once: true });
   } else {
     ensureFocusable();
   }
@@ -242,40 +278,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const links = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
   const map = new Map(
     links
-      .map(a => a.getAttribute('href'))
-      .filter(h => h && h.startsWith('#'))
-      .map(href => [href, document.querySelector(href)])
+      .map((a) => a.getAttribute("href"))
+      .filter((h) => h && h.startsWith("#"))
+      .map((href) => [href, document.querySelector(href)])
       .filter(([, el]) => !!el)
   );
 
   // add a class for styling
   const setActive = (id) => {
-    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+    links.forEach((a) =>
+      a.classList.toggle("active", a.getAttribute("href") === id)
+    );
   };
 
   // observe sections
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) setActive('#' + e.target.id);
-    });
-  }, { rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--header-h') || '72px'} 0px -60% 0px`, threshold: 0.1 });
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive("#" + e.target.id);
+      });
+    },
+    {
+      rootMargin: `-${
+        getComputedStyle(document.documentElement).getPropertyValue("--header-h") ||
+        "72px"
+      } 0px -60% 0px`,
+      threshold: 0.1,
+    }
+  );
 
-  map.forEach(el => obs.observe(el));
+  map.forEach((el) => obs.observe(el));
 })();
 
 // --- Anchor offset: match scroll-margin-top to the real header height ---
 (() => {
-  const header = document.querySelector('.site-header');
+  const header = document.querySelector(".site-header");
   if (!header) return;
 
   const setHeaderVar = () => {
     const h = Math.ceil(header.getBoundingClientRect().height);
     // a tiny cushion (+10) so headings aren't tucked under the shadow
-    document.documentElement.style.setProperty('--header-h', `${h + 10}px`);
+    document.documentElement.style.setProperty("--header-h", `${h + 10}px`);
   };
 
   // Run on load, resize, and whenever header size changes (e.g., responsive wrap)
-  window.addEventListener('load', setHeaderVar);
-  window.addEventListener('resize', setHeaderVar);
+  window.addEventListener("load", setHeaderVar);
+  window.addEventListener("resize", setHeaderVar);
   new ResizeObserver(setHeaderVar).observe(header);
 })();
