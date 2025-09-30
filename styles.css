@@ -26,6 +26,12 @@ section { scroll-margin-top: var(--header-h); }
   /* If you already have sticky, great; if not, this helps */
 }
 
+/* Avoid top-margin collapse so headings land consistently */
+section { border-top: 1px solid transparent; }     /* creates a “real” top edge */
+section > h3,
+.section-title { margin-top: 0; }                   /* first element has no extra top margin */
+
+
 header nav a.active {
   color: var(--link-hover, #8cfef2);
   text-decoration: underline;
