@@ -26,6 +26,12 @@ section { scroll-margin-top: var(--header-h); }
   /* If you already have sticky, great; if not, this helps */
 }
 
+header nav a.active {
+  color: var(--link-hover, #8cfef2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 a{ color: var(--link); }
 a:hover, a:focus-visible{ color: var(--link-hover); }
 a:visited{ color: var(--link-visited); }
