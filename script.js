@@ -236,3 +236,30 @@ document.addEventListener("DOMContentLoaded", () => {
     ensureFocusable();
   }
 })();
+
+// Highlight active nav link on scroll
+(() => {
+  const links = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
+  const map = new Map(
+    links
+      .map(a => a.getAttribute('href'))
+      .filter(h => h && h.startsWith('#'))
+      .map(href => [href, document.querySelector(href)])
+      .filter(([, el]) => !!el)
+  );
+
+  // add a class for styling
+  const setActive = (id) => {
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+  };
+
+  // observe sections
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) setActive('#' + e.target.id);
+    });
+  }, { rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--header-h') || '72px'} 0px -60% 0px`, threshold: 0.1 });
+
+  map.forEach(el => obs.observe(el));
+})();
+
