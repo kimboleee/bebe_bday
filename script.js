@@ -263,3 +263,19 @@ document.addEventListener("DOMContentLoaded", () => {
   map.forEach(el => obs.observe(el));
 })();
 
+// --- Anchor offset: match scroll-margin-top to the real header height ---
+(() => {
+  const header = document.querySelector('.site-header');
+  if (!header) return;
+
+  const setHeaderVar = () => {
+    const h = Math.ceil(header.getBoundingClientRect().height);
+    // a tiny cushion (+10) so headings aren't tucked under the shadow
+    document.documentElement.style.setProperty('--header-h', `${h + 10}px`);
+  };
+
+  // Run on load, resize, and whenever header size changes (e.g., responsive wrap)
+  window.addEventListener('load', setHeaderVar);
+  window.addEventListener('resize', setHeaderVar);
+  new ResizeObserver(setHeaderVar).observe(header);
+})();
